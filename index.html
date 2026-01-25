@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematik Arena | Math Challenge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-math: #3b82f6;
+            --dark-math: #2563eb;
+            --light-math: #60a5fa;
+            --accent-orange: #f59e0b;
+            --background-math: #eff6ff;
+            --card-math: #dbeafe;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            min-height: 100vh;
+        }
+        
+        body.english {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Language Switcher */
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            gap: 10px;
+            background: white;
+            border-radius: 50px;
+            padding: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .lang-btn {
+            padding: 8px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn.active {
+            background: var(--primary-math);
+            color: white;
+        }
+        
+        .lang-btn:hover:not(.active) {
+            background: #f1f5f9;
+        }
+        
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 15px rgba(59, 130, 246, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: var(--primary-math);
+        }
+        
+        .logo i {
+            color: var(--accent-orange);
+            font-size: 2.2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: var(--primary-math);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: var(--primary-math);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 180px 0 100px;
+            color: white;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-math) 0%, var(--dark-math) 100%);
+            border-radius: 0 0 40px 40px;
+            margin-bottom: 40px;
+        }
+        
+        body.english .hero {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        }
+        
+        .hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--accent-orange);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        .cta-button:hover {
+            background: #e6900b;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.6);
+        }
+        
+        .cta-button i {
+            margin-right: 10px;
+        }
+        
+        /* Game Stats */
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            min-width: 150px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: white;
+            border-radius: 30px 30px 0 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--primary-math);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: var(--card-math);
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.15);
+            border-color: var(--primary-math);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-math);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+        
+        /* Puzzle Types Section */
+        .puzzles {
+            padding: 100px 0;
+            background: var(--background-math);
+        }
+        
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .puzzle-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--accent-orange);
+        }
+        
+        .puzzle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.1);
+        }
+        
+        .puzzle-icon {
+            font-size: 2.5rem;
+            color: var(--primary-math);
+            margin-bottom: 15px;
+        }
+        
+        .puzzle-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+        
+        /* Screenshots Section */
+        .screenshots {
+            padding: 100px 0;
+            background: white;
+        }
+        
+        .screenshot-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .screenshot {
+            width: 250px;
+            height: 450px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+            background: linear-gradient(135deg, var(--primary-math), var(--dark-math));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screenshot:hover {
+            transform: scale(1.05);
+        }
+        
+        .screenshot::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+        }
+        
+        /* Download Section */
+        .download {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-math) 0%, var(--dark-math) 100%);
+            color: white;
+            border-radius: 40px 40px 0 0;
+            margin-top: 40px;
+        }
+        
+        .download-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .download h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .download p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .play-store-button {
+            display: inline-flex;
+            align-items: center;
+            background: white;
+            color: var(--primary-math);
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .play-store-button:hover {
+            background: #f8fafc;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            color: var(--dark-math);
+        }
+        
+        .play-store-button img {
+            width: 40px;
+            margin-right: 15px;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 60px 0 30px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .footer-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--primary-math);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            color: var(--primary-math);
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+            width: 100%;
+            color: #9ca3af;
+        }
+        
+        /* Language Content */
+        .lang-content {
+            display: none;
+        }
+        
+        .lang-content.active {
+            display: block;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero {
+                padding: 200px 0 80px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+                padding: 0 15px;
+            }
+            
+            .game-stats {
+                gap: 20px;
+            }
+            
+            .stat {
+                min-width: 120px;
+                padding: 15px 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .puzzle-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .screenshot {
+                width: 200px;
+                height: 400px;
+            }
+            
+            .language-switcher {
+                top: 10px;
+                right: 10px;
+            }
+        }
+        
+        /* Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .math-animation {
+            font-size: 5rem;
+            margin: 40px 0;
+            animation: float 4s ease-in-out infinite;
+            color: var(--accent-orange);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="turkish">
+    <!-- Dil Değiştirici -->
+    <div class="language-switcher">
+        <button class="lang-btn active" data-lang="tr">
+            <i class="fas fa-flag"></i> TR
+        </button>
+        <button class="lang-btn" data-lang="en">
+            <i class="fas fa-flag-usa"></i> EN
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-calculator"></i>
+                <span class="game-name">Matematik Arena</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#features" class="nav-features">Özellikler</a></li>
+                    <li><a href="#puzzles" class="nav-puzzles">Bulmacalar</a></li>
+                    <li><a href="#screenshots" class="nav-screenshots">Görseller</a></li>
+                    <li><a href="#download" class="nav-download">İndir</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section - Turkish -->
+    <section class="hero lang-content active" data-lang="tr">
+        <div class="container">
+            <h1 class="hero-title">Matematik Arenasına Hoş Geldin!</h1>
+            <p class="hero-subtitle">Beynini zorlayan matematik bulmacaları, zeka oyunları ve mantık soruları. Matematik artık daha eğlenceli!</p>
+            <a href="#download" class="cta-button">
+                <i class="fab fa-google-play"></i> Hemen Ücretsiz İndir
+            </a>
+            
+            <!-- Matematik Animasyonu -->
+            <div class="math-animation">
+                <span>2 + 2 = 4</span> <span style="margin: 0 20px;">×</span> <span>5² = 25</span>
+            </div>
+            
+            <!-- Oyun İstatistikleri -->
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-number">100+</span>
+                    <span class="stat-label">Matematik Sorusu</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Zorluk Seviyesi</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">Sınırsız Eğlence</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hero Section - English -->
+    <section class="hero lang-content" data-lang="en">
+        <div class="container">
+            <h1 class="hero-title">Welcome to Math Challenge!</h1>
+            <p class="hero-subtitle">Brain-teasing math puzzles, IQ games and logic questions. Math is now more fun!</p>
+            <a href="#download" class="cta-button">
+                <i class="fab fa-google-play"></i> Download Free Now
+            </a>
+            
+            <!-- Math Animation -->
+            <div class="math-animation">
+                <span>2 + 2 = 4</span> <span style="margin: 0 20px;">×</span> <span>5² = 25</span>
+            </div>
+            
+            <!-- Game Stats -->
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-number">100+</span>
+                    <span class="stat-label">Math Questions</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Difficulty Levels</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">Endless Fun</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title lang-content active" data-lang="tr">Neden Matematik Arena?</h2>
+            <h2 class="section-title lang-content" data-lang="en">Why Math Challenge?</h2>
+            
+            <div class="features-grid">
+                <!-- Özellik 1 - Turkish -->
+                <div class="feature-card lang-content active" data-lang="tr">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Zeka Geliştirir</h3>
+                    <p>Matematiksel düşünme, mantık ve problem çözme becerilerini geliştir. Beynini her gün çalıştır!</p>
+                </div>
+                
+                <!-- Özellik 1 - English -->
+                <div class="feature-card lang-content" data-lang="en">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Improves Intelligence</h3>
+                    <p>Develops mathematical thinking, logic and problem-solving skills. Exercise your brain every day!</p>
+                </div>
+                
+                <!-- Özellik 2 - Turkish -->
+                <div class="feature-card lang-content active" data-lang="tr">
+                    <div class="feature-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>Eğlenceli Oyunlar</h3>
+                    <p>Matematik artık sıkıcı değil! Zevkli oyunlarla matematik öğren, puan topla ve seviye atla.</p>
+                </div>
+                
+                <!-- Özellik 2 - English -->
+                <div class="feature-card lang-content" data-lang="en">
+                    <div class="feature-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>Fun Games</h3>
+                    <p>Math is no longer boring! Learn math with fun games, score points and level up.</p>
+                </div>
+                
+                <!-- Özellik 3 - Turkish -->
+                <div class="feature-card lang-content active" data-lang="tr">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>İlerleme Takibi</h3>
+                    <p>Günlük, haftalık ve aylık istatistiklerle gelişimini takip et. Ne kadar ilerlediğini gör!</p>
+                </div>
+                
+                <!-- Özellik 3 - English -->
+                <div class="feature-card lang-content" data-lang="en">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Progress Tracking</h3>
+                    <p>Track your progress with daily, weekly and monthly statistics. See how far you've come!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Puzzle Types Section -->
+    <section class="puzzles" id="puzzles">
+        <div class="container">
+            <h2 class="section-title lang-content active" data-lang="tr">Bulmaca Türleri</h2>
+            <h2 class="section-title lang-content" data-lang="en">Puzzle Types</h2>
+            
+            <div class="puzzle-container">
+                <!-- Bulmaca 1 - Turkish -->
+                <div class="puzzle-card lang-content active" data-lang="tr">
+                    <div class="puzzle-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h4>Aritmetik Bulmacalar</h4>
+                    <p>Toplama, çıkarma, çarpma, bölme işlemleri ile temel matematik becerilerini geliştir.</p>
+                </div>
+                
+                <!-- Bulmaca 1 - English -->
+                <div class="puzzle-card lang-content" data-lang="en">
+                    <div class="puzzle-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h4>Arithmetic Puzzles</h4>
+                    <p>Develop basic math skills with addition, subtraction, multiplication, and division operations.</p>
+                </div>
+                
+                <!-- Bulmaca 2 - Turkish -->
+                <div class="puzzle-card lang-content active" data-lang="tr">
+                    <div class="puzzle-icon">
+                        <i class="fas fa-shapes"></i>
+                    </div>
+                    <h4>Geometri Soruları</h4>
+                    <p>Şekiller, açılar ve uzamsal düşünme becerilerini test eden geometri bulmacaları.</p>
+                </div>
+                
+                <!-- Bulmaca 2 - English -->
+                <div class="puzzle-card lang-content" data-lang="en">
+                    <div class="puzzle-icon">
+                        <i class="fas fa-shapes"></i>
+                    </div>
+                    <h4>Geometry Questions</h4>
+                    <p>Geometry puzzles that test shapes, angles and spatial thinking skills.</p>
+                </div>
+                
+                <!-- Bulmaca 3 - Turkish -->
+                <div class="puzzle-card lang-content active" data-lang="tr">
+                    <div class="puzzle-icon">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h4>Mantık Oyunları</h4>
+                    <p>Sudoku, mantık karesi ve diğer zeka oyunları ile analitik düşünceni geliştir.</p>
+                </div>
+                
+                <!-- Bulmaca 3 - English -->
+                <div class="puzzle-card lang-content" data-lang="en">
+                    <div class="puzzle-icon">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h4>Logic Games</h4>
+                    <p>Develop your analytical thinking with Sudoku, logic squares and other IQ games.</p>
+                </div>
+                
+                <!-- Bulmaca 4 - Turkish -->
+                <div class="puzzle-card lang-content active" data-lang="tr">
+                    <div class="puzzle-icon">
+                        <i class="fas fa-stopwatch"></i>
+                    </div>
+                    <h4>Zaman Yarışı</h4>
+                    <p>Süreli modda hızını test et, reflekslerini geliştir ve rekorlar kır!</p>
+                </div>
+                
+                <!-- Bulmaca 4 - English -->
+                <div class="puzzle-card lang-content" data-lang="en">
+                    <div class="puzzle-icon">
+                        <i class="fas fa-stopwatch"></i>
+                    </div>
+                    <h4>Time Race</h4>
+                    <p>Test your speed in timed mode, improve your reflexes and break records!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots" id="screenshots">
+        <div class="container">
+            <h2 class="section-title lang-content active" data-lang="tr">Oyun Görselleri</h2>
+            <h2 class="section-title lang-content" data-lang="en">Game Screenshots</h2>
+            
+            <div class="screenshot-container">
+                <div class="screenshot">
+                    <span class="lang-content active" data-lang="tr">ANA MENÜ</span>
+                    <span class="lang-content" data-lang="en">MAIN MENU</span>
+                </div>
+                <div class="screenshot">
+                    <span class="lang-content active" data-lang="tr">OYUN EKRANI</span>
+                    <span class="lang-content" data-lang="en">GAME SCREEN</span>
+                </div>
+                <div class="screenshot">
+                    <span class="lang-content active" data-lang="tr">SKOR TABLOSU</span>
+                    <span class="lang-content" data-lang="en">SCOREBOARD</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download" id="download">
+        <div class="container">
+            <div class="download-container">
+                <!-- Turkish -->
+                <h2 class="lang-content active" data-lang="tr">Matematik Macerasına Katıl!</h2>
+                <h2 class="lang-content" data-lang="en">Join the Math Adventure!</h2>
+                
+                <p class="lang-content active" data-lang="tr">Matematik Arena'yı şimdi indir ve matematik becerilerini geliştirmeye başla. Ücretsiz ve reklamsız!</p>
+                <p class="lang-content" data-lang="en">Download Math Challenge now and start improving your math skills. Free and ad-free!</p>
+                
+                <!-- PLAY STORE BUTTON -->
+                <a href="https://play.google.com/store/apps/details?id=com.nazcadev.matematikarena" class="play-store-button" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="#3b82f6">
+                        <path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-1.163.409l11.257 10.385zm0 2.067l-11.257 10.385c.299.276.685.425 1.101.425.312 0 .615-.089.878-.257l13.337-7.54-3.258-3.229z"/>
+                    </svg>
+                    <span class="lang-content active" data-lang="tr">Google Play'den İndir</span>
+                    <span class="lang-content" data-lang="en">Download on Google Play</span>
+                </a>
+                
+                <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.8;">
+                    <span class="lang-content active" data-lang="tr">Android 5.0 ve üzeri sürümleri destekler</span>
+                    <span class="lang-content" data-lang="en">Supports Android 5.0 and above</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="lang-content active" data-lang="tr">Matematik Arena</span>
+                    <span class="lang-content" data-lang="en">Math Challenge</span>
+                </div>
+                
+                <p class="lang-content active" data-lang="tr">NazcaDev tarafından geliştirildi</p>
+                <p class="lang-content" data-lang="en">Developed by NazcaDev</p>
+                
+                <div class="social-icons">
+                    <a href="https://instagram.com/nazcadev" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="mailto:nazcadev@outlook.com">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    <a href="https://nazcadev.github.io" target="_blank">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                </div>
+                
+                <div class="copyright">
+                    <span class="lang-content active" data-lang="tr">&copy; 2023 Matematik Arena. Tüm hakları saklıdır.</span>
+                    <span class="lang-content" data-lang="en">&copy; 2023 Math Challenge. All rights reserved.</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dil değiştirme fonksiyonu
+        function changeLanguage(lang) {
+            // Tüm dil içeriklerini gizle
+            document.querySelectorAll('.lang-content').forEach(element => {
+                element.classList.remove('active');
+            });
+            
+            // Seçili dili göster
+            document.querySelectorAll(`.lang-content[data-lang="${lang}"]`).forEach(element => {
+                element.classList.add('active');
+            });
+            
+            // Dil butonlarını güncelle
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.dataset.lang === lang) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Body class'ını güncelle
+            document.body.className = lang;
+            
+            // Oyun ismini güncelle
+            const gameNameElement = document.querySelector('.game-name');
+            if(lang === 'tr') {
+                gameNameElement.textContent = 'Matematik Arena';
+                document.title = 'Matematik Arena | Matematik Bulmaca Oyunu';
+            } else {
+                gameNameElement.textContent = 'Math Challenge';
+                document.title = 'Math Challenge | Math Puzzle Game';
+            }
+            
+            // Header navigasyon metinlerini güncelle
+            updateNavigationTexts(lang);
+            
+            // Dil tercihini localStorage'a kaydet
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        // Navigasyon metinlerini güncelle
+        function updateNavigationTexts(lang) {
+            const navFeatures = document.querySelector('.nav-features');
+            const navPuzzles = document.querySelector('.nav-puzzles');
+            const navScreenshots = document.querySelector('.nav-screenshots');
+            const navDownload = document.querySelector('.nav-download');
+            
+            if(lang === 'tr') {
+                navFeatures.textContent = 'Özellikler';
+                navPuzzles.textContent = 'Bulmacalar';
+                navScreenshots.textContent = 'Görseller';
+                navDownload.textContent = 'İndir';
+            } else {
+                navFeatures.textContent = 'Features';
+                navPuzzles.textContent = 'Puzzles';
+                navScreenshots.textContent = 'Screenshots';
+                navDownload.textContent = 'Download';
+            }
+        }
+        
+        // Dil butonlarına tıklama olayı
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+                changeLanguage(lang);
+            });
+        });
+        
+        // Sayfa yüklendiğinde dil tercihini kontrol et
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'tr';
+            changeLanguage(savedLang);
+            
+            // Play Store linkini güncelle
+            const playStoreLink = "https://play.google.com/store/apps/details?id=com.nazcadev.matematikarena";
+            document.querySelectorAll('.play-store-button, .cta-button').forEach(button => {
+                button.setAttribute('href', playStoreLink);
+            });
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Header scroll efekti
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 5px 20px rgba(59, 130, 246, 0.15)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = '0 2px 15px rgba(59, 130, 246, 0.1)';
+            }
+        });
+        
+        // Matematik animasyonunu değiştir
+        function changeMathAnimation() {
+            const animations = [
+                '2 + 2 = 4 × 5² = 25',
+                '√16 = 4 + π ≈ 7.14',
+                '12 ÷ 3 = 4 × 7 = 28',
+                '8² = 64 - 10 = 54'
+            ];
+            
+            const animationElement = document.querySelector('.math-animation');
+            if (animationElement) {
+                let currentIndex = 0;
+                setInterval(() => {
+                    currentIndex = (currentIndex + 1) % animations.length;
+                    animationElement.innerHTML = `<span>${animations[currentIndex]}</span>`;
+                }, 3000);
+            }
+        }
+        
+        // Varsayılan olarak Türkçe dilini yükle
+        window.onload = function() {
+            const defaultLang = localStorage.getItem('preferredLanguage') || 'tr';
+            changeLanguage(defaultLang);
+            changeMathAnimation();
+        };
+    </script>
+</body>
+</html>
